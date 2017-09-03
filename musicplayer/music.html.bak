@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="en">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="Generator" content="EditPlus®">
+  <meta name="Author" content="">
+  <meta name="Keywords" content="">
+  <meta name="Description" content="">
+  <script type = "text/javascript" src = "my_player.js"></script>
+  <title>Document</title>
+ </head>
+ <body>
+  
+ </body>
+ <script type = "text/javascript">
+	//DNmusicPlay({audioUrl:"yezi-suyunying.mp3"});
+	DNmusicPlay({
+		boxStyle:"top:20xp;right:20px;opacity:1;",
+		audioUrl:[
+		{title:"野子",source:"yezi-suyunying.mp3"},
+		{title:"斩杀神曲", source:"zhansha.mp3"}
+	]});
+ </script>
+</html>

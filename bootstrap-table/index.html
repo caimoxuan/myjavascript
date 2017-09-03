@@ -1,0 +1,66 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>bootstrap表格数据绑定</title>
+		<link rel = "stylesheet" href = "bootstrap-3.3.7/css/bootstrap.min.css" />
+		<script type = "text/javascript" src = "js/jquery-3.2.1.min.js"></script>
+		<script type = "text/javascript" src = "bootstrap-3.3.7/js/bootstrap.min.js"></script>
+		<script type = "text/javascript" src = "js/mybootstrap-table.js"></script>
+		<style type = "text/css">
+			.page_nav.page-bottom{
+				height:34px;
+			}
+			.pagination{
+				margin:0px;
+				padding:0px;
+			}
+			table *{
+				padding:0px;
+				margin:0px;
+			}
+			
+		</style>
+	</head>
+	<body>
+		<div class = "column-table">
+			<table class="table table-hover table-bordered table-condensed">
+			  <caption>
+				<div style = "width:100%;height:50px;border:1px solid red;"></div>
+			  </caption>
+			  <thead>
+				<tr>
+				  <th>名称</th>
+				  <th>城市</th>
+				  <th>地区</th>
+				</tr>
+			  </thead>
+			  
+			  <tfoot>
+				<tr >
+					<td colspan = "2" style = "vertical-align:middle;">
+						<div class = "page_nav page-bottom">
+							
+						</div>
+					</td>
+				</tr>
+			  </tfoot>
+			  <tbody id = "table-body">
+				
+			  </tbody>
+			</table>
+		</div>
+				
+		
+	</body>
+	<script type = "text/javascript">
+		$(".column-table").mybootstrapTable({pageSize:1,row:[{name:"Tanmay",block:"Sachin",street:"stone_str"},{name:"Bangalore",block:"Mumbai",street:"black_str"}]},["name",{key:"block",format:function(val,i,table){return table[i].block;}},"street"]);
+		
+		
+		
+	</script>
+	
+	<footer>
+	
+	</footer>
+
+</html>
