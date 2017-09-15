@@ -1,0 +1,48 @@
+<html>
+  <head>
+    <script type = "text/javascript" src = "assets/js/jquery-2.1.1.min.js" ></script>
+    <script type = "text/javascript" src = "assets/js/left-tab-event.js" ></script>
+    <titlt>
+
+    </title>
+    <style type = "text/css">
+      *{
+        margin:0px;
+        padding:0px;
+      }
+      #content{
+        width:50%;
+        height:580px;
+        border:1px solid yellow;
+        margin:100px auto;
+      }
+      #role-list{
+        width:12%;
+        height:580px;
+        float:left;
+        border:1px solid blue;
+      }
+      #message-panel{
+        height:580px;
+        border:solid 1px red;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id = "content">
+      <div id = "role-list"></div>
+      <div id = "message-panel" ></div>
+    </div>
+    <div id = "right">
+      <ul>
+        <li>cmx</li>
+      </ul>
+    </div>
+  </body>
+  <script type = "text/javascript">
+  $(function(){
+      $("#content").leftTabEvent("动");
+  });
+  </script>
+</html>

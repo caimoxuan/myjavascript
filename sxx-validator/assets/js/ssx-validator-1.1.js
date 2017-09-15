@@ -26,8 +26,11 @@
 	}
 	$.fn[plug] = function(options){
 		$(this).on("submit", function(){
+			alert("abc");
 			console.log("提交表单事件");
-			return false;
+			var result = true;
+
+			return result;
 		});
 		$.extend(this, __OPTIONS__, options);
 		var $fileds = this.find('input').not("[type=button],[type=reset],[type=submit]");
