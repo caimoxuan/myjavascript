@@ -17,7 +17,7 @@
     this.rolename = rolename;
     this.headpath = headpath;
     this.onlinestate = onlinestate;
-    this.html = '<li class="role-list" id = "'+roleid+'"><a href="#" class="ui-link"><img src="'+headpath+'"></a></li>';
+    this.html = '<li class="role-list" id = "'+roleid+'"><a href="#" class="ui-link"><img src="'+headpath+'">'+rolename+'</a></li>';
     this.message = "";
   }
 
@@ -36,13 +36,13 @@
 		var rolist = roleUl.find('li');
 		rolist.css({"border-right":"none"});
 		var ulHtml = $("#right").html();
-		$("#right").html(ulhtml+role.html);
+		$("#right").html(ulHtml+role.html);
 		__CONTENT__.messagelist.push(role);
 	}
 
   }
   
-  window.clickRole(e){
+  window.clickRole = function(e){
 	  var roleid = e.attr('id');
 	  var roleUl = $("#role-container").find('ul');
 	  var rolist = roleUl.find('li');
