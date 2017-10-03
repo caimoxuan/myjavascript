@@ -6,13 +6,18 @@
 		columnSize:1,//总列数，方便分页脚注使用colspan
 		pageSize:10,//每一页有多少条记录
 		pageStart:1,//开始页码
-		pageEnd:1,//结束的页码
-		pageCount:1,//总共有多少页
-		pageNow:1,//当前是第几页
+		pageCount:30,//总共有多少页
+		pageNow:10,//当前是第几页
 		url:"",
 		pageHtml:'<li><a href="#" >1</a></li>'+
 					'<li><a href="#">2</a></li>'+
 					'<li><a href="#">3</a></li>'
+	}
+	
+	var domElement = {
+		tbody:"",
+		thead:"",
+		tfoot:""
 	}
 	
 	function settings(pageContent) {
@@ -24,9 +29,10 @@
 						'<li class = "'+(pageContent.pageNow>1?"":"disabled")+'"><a href="#" class = "disabled">&laquo;</a></li>'+
 						pageContent.pageHtml+
 						'<li class = "'+(pageContent.pageNow>=pageContent.pageCount?"disabled":"")+'"><a href="#" class = "disabled">&raquo;</a></li>'+
-					'</tr></td></ul>';
+						'</tr></td></ul>';
 	}
 	
+	//生成页码
 	function initPage(page){
 		var page_ = null;
 		if(page)
@@ -34,13 +40,60 @@
 		else
 			page_ = pageContent;
 		var pageHtml_ = "";
-		for(var i = page_.pageStart; i <= page_.pageCount; i++){
-			pageHtml_ += '<li><a href = "#">'+i+'</a></li>';
+		
+		
+		
+		if(page_.pageNow != 1 && page_.pageNow >= 4 && page_.pageCount != 4){
+			pageHtml_ += '<li><a href = "#" class = "page_pager" >'+1+'</a></li>';
 		}
+		if(page_.pageNow-2>2 && page_.pageNow<=page_.pageCount && page_.pageCount>5) {
+			pageHtml_ += '<li class = "disabled"><a href="javascript:void(0);">...</a></li>';
+		}
+		
+		var start = page_.pageNow - 2;
+		var end = page_.pageNow + 2;
+		console.log(start + "," + end);	
+		if((start>1 && page_.pageNow<4) || page_.pageNow==1) {
+			end++;
+		}
+		if(page_.pageNow>page_.pageCount-4 && page_.pageNow>=page_.pageCount) {
+			start--;
+		}
+		console.log(start + "," + end);
+		for(; start<=end; start++) {
+			if(start<=page_.pageCount && start>=1) {
+				pageHtml_ += '<li class="ali"><a href="javascript:void(0);" class = "page_pager" >'+start+'</a></li>';
+			}
+		}
+		if(page_.pageNow+2<page_.pageCount-1 && page_.pageNow>=1 && page_.pageCount>5) {
+			pageHtml_ += "<li class='disabled'><a href='javascript:void(0);'>...</a></li>";
+		}
+
+		if(page_.pageNow!=page_.pageCount && page_.pageNow<page_.pageCount-2 && page_.pageCount!=4) {
+			pageHtml_ += '<li class="ali"><a href="javascript:void(0);" class = "page_pager" >'+page_.pageCount+'</a></li>';
+		}
+		
+		
+		//for(var i = page_.pageStart; i <= page_.pageCount; i++){
+		//	pageHtml_ += '<li><a href = "#">'+i+'</a></li>';
+		//}
 		
 		pageContent = page_;
 		pageContent.pageHtml = pageHtml_;
 		return pageContent;
+	}
+	
+	//页码点击事件
+	function bindClick(dom, content){
+		dom.on("click", "a.page_pager", function(){
+			var pageNow = parseInt($(this).text());
+			pageContent.pageNow = pageNow;
+			console.log(content);
+			content = initPage(pageContent);
+			var setting = new settings(content);
+			reflash(setting.pagination);
+			bindClick($(".pagination"));
+		});
 	}
 		
 	function ajaxData(pageContent){
@@ -63,6 +116,11 @@
 		return data;
 	}
 	
+	function reflash(html){
+		domElement.tfoot.html(html);
+		
+	}
+	
 	
 	
 	$.fn[plug] = function(result, rule){
@@ -72,13 +130,16 @@
 		var thead_ = this.find('table').find('thead').find('tr').find('th');
 		var tbody_ = this.find('table').find('tbody');
 		var tfoot_ = this.find('table').find('tfoot');
+		domElement.thead = thead_;
+		domElement.tbody = tbody_;
+		domElement.tfoot = tfoot_;
 		var pagination_ = $(".page_nav.page-bottom");
 		
 		tfoot_.css({"text-align":"center","height":50,"vertical-align":"middle"});
 		//初始化pageContent
 		var pageContent_ = initPage({columnSize:thead_.length});
+		console.log(pageContent);
 		var settings_ = new settings(pageContent_);
-		pageContent_.columnSize = result.pageSize;
 		//填充分页html
 		tfoot_.html(settings_.pagination);
 		self_.css({width:settings_.tableWidth});
@@ -115,6 +176,8 @@
 			html+=html_;
 		}
 		tbody_.html(html);
+		//绑定事件
+		bindClick($(".pagination"));
 	}
 }, "mybootstrapTable");
 
