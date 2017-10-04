@@ -8,7 +8,7 @@
 		pageStart:1,//开始页码
 		pageCount:30,//总共有多少页
 		pageNow:10,//当前是第几页
-		url:"",
+		url:"http://localhost:8080/CloudnetServiceTest/filedownload/getjson",
 		pageHtml:'<li><a href="#" >1</a></li>'+
 					'<li><a href="#">2</a></li>'+
 					'<li><a href="#">3</a></li>'
@@ -52,7 +52,8 @@
 		
 		var start = page_.pageNow - 2;
 		var end = page_.pageNow + 2;
-		console.log(start + "," + end);	
+		var active = page_.pageNow;
+			
 		if((start>1 && page_.pageNow<4) || page_.pageNow==1) {
 			end++;
 		}
@@ -62,7 +63,7 @@
 		console.log(start + "," + end);
 		for(; start<=end; start++) {
 			if(start<=page_.pageCount && start>=1) {
-				pageHtml_ += '<li class="ali"><a href="javascript:void(0);" class = "page_pager" >'+start+'</a></li>';
+				pageHtml_ += '<li class="'+(start==active?"active":"")+'"><a href="javascript:void(0);" class = "page_pager" >'+start+'</a></li>';
 			}
 		}
 		if(page_.pageNow+2<page_.pageCount-1 && page_.pageNow>=1 && page_.pageCount>5) {
@@ -74,23 +75,22 @@
 		}
 		
 		
-		//for(var i = page_.pageStart; i <= page_.pageCount; i++){
-		//	pageHtml_ += '<li><a href = "#">'+i+'</a></li>';
-		//}
-		
 		pageContent = page_;
 		pageContent.pageHtml = pageHtml_;
 		return pageContent;
 	}
 	
 	//页码点击事件
-	function bindClick(dom, content){
+	function bindClick(dom){
 		dom.on("click", "a.page_pager", function(){
 			var pageNow = parseInt($(this).text());
 			pageContent.pageNow = pageNow;
-			console.log(content);
-			content = initPage(pageContent);
-			var setting = new settings(content);
+			//var content = initPage(pageContent);
+			
+			ajaxData(pageContent);
+			console.log(pageContent);
+			initPage(pageContent);
+			var setting = new settings(pageContent);
 			reflash(setting.pagination);
 			bindClick($(".pagination"));
 		});
@@ -103,10 +103,13 @@
 			$.ajax({
 				url:pageContent.url,
 				type:'POST',
+				data:{pageSize:pageContent.pageSize,pageNow:pageContent.pageNow},
 				dataType:'json',
 				async:false,
 				success:function(result){
 					data = result;
+					pageContent.pageNow = data.pageNow;
+					pageContent.pageCount = data.pageCount;
 				},
 				error:function(data){
 					console.log(data);
@@ -136,21 +139,22 @@
 		var pagination_ = $(".page_nav.page-bottom");
 		
 		tfoot_.css({"text-align":"center","height":50,"vertical-align":"middle"});
+		
+		var options = null;
+		//ajax
+		var data = ajaxData(pageContent);
+		if(data)
+			options = data.row;
+		else
+			options = result.row;
+		
 		//初始化pageContent
 		var pageContent_ = initPage({columnSize:thead_.length});
-		console.log(pageContent);
 		var settings_ = new settings(pageContent_);
 		//填充分页html
 		tfoot_.html(settings_.pagination);
 		self_.css({width:settings_.tableWidth});
 		
-		var options = null;
-		//ajax
-		var data = ajaxData(pageContent_);
-		if(data)
-			options = data.row;
-		else
-			options = result.row;
 		var html = "";
 		//判断是否使用格式化函数来格式化数据，并且组装数据
 		for(var i = 0; i < options.length; i++){
